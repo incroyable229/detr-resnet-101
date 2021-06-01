@@ -65,7 +65,7 @@ The model was trained for 300 epochs on 16 V100 GPUs. This takes 3 days, with 4 
 
 ## Evaluation results
 
-This model achieves an AP (average precision) of 43.5 on COCO 2017 validation. For more details regarding evaluation results, we refer to table 1 of the original paper.
+This model achieves an AP (average precision) of **43.5** on COCO 2017 validation. For more details regarding evaluation results, we refer to table 1 of the original paper.
 ### BibTeX entry and citation info
 
 ```bibtex
