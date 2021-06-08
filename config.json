@@ -211,7 +211,6 @@
   "num_hidden_layers": 6,
   "num_queries": 100,
   "position_embedding_type": "sine",
-  "return_intermediate_layers": false,
   "scale_embedding": false,
   "transformers_version": "4.7.0.dev0"
 }
