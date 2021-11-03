@@ -4,6 +4,13 @@ tags:
 - object-detection
 datasets:
 - coco
+widget:
+- src: https://huggingface.co/datasets/mishig/sample_images/resolve/main/savanna.jpg
+  example_title: Savanna
+- src: https://huggingface.co/datasets/mishig/sample_images/resolve/main/football-match.jpg
+  example_title: Football Match
+- src: https://huggingface.co/datasets/mishig/sample_images/resolve/main/airport.jpg
+  example_title: Airport
 ---
 
 # DETR (End-to-End Object Detection) model with ResNet-101 backbone
