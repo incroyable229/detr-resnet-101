@@ -2,6 +2,7 @@
 license: apache-2.0
 tags:
 - object-detection
+- vision
 datasets:
 - coco
 widget:
