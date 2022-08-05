@@ -26,6 +26,8 @@ The DETR model is an encoder-decoder transformer with a convolutional backbone. 
 
 The model is trained using a "bipartite matching loss": one compares the predicted classes + bounding boxes of each of the N = 100 object queries to the ground truth annotations, padded up to the same length N (so if an image only contains 4 objects, 96 annotations will just have a "no object" as class and "no bounding box" as bounding box). The Hungarian matching algorithm is used to create an optimal one-to-one mapping between each of the N queries and each of the N annotations. Next, standard cross-entropy (for the classes) and a linear combination of the L1 and generalized IoU loss (for the bounding boxes) are used to optimize the parameters of the model.
 
+![model image](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/transformers/model_doc/detr_architecture.png)
+
 ## Intended uses & limitations
 
 You can use the raw model for object detection. See the [model hub](https://huggingface.co/models?search=facebook/detr) to look for all available DETR models.
@@ -36,21 +38,39 @@ Here is how to use this model:
 
 ```python
 from transformers import DetrFeatureExtractor, DetrForObjectDetection
+import torch
 from PIL import Image
 import requests
 
-url = 'http://images.cocodataset.org/val2017/000000039769.jpg'
+url = "http://images.cocodataset.org/val2017/000000039769.jpg"
 image = Image.open(requests.get(url, stream=True).raw)
 
-feature_extractor = DetrFeatureExtractor.from_pretrained('facebook/detr-resnet-101')
-model = DetrForObjectDetection.from_pretrained('facebook/detr-resnet-101')
+feature_extractor = DetrFeatureExtractor.from_pretrained("facebook/detr-resnet-101")
+model = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-101")
 
 inputs = feature_extractor(images=image, return_tensors="pt")
 outputs = model(**inputs)
 
-# model predicts bounding boxes and corresponding COCO classes
-logits = outputs.logits
-bboxes = outputs.pred_boxes
+# convert outputs (bounding boxes and class logits) to COCO API
+target_sizes = torch.tensor([image.size[::-1]])
+results = feature_extractor.post_process(outputs, target_sizes=target_sizes)[0]
+
+for score, label, box in zip(results["scores"], results["labels"], results["boxes"]):
+    box = [round(i, 2) for i in box.tolist()]
+    # let's only keep detections with score > 0.9
+    if score > 0.9:
+        print(
+            f"Detected {model.config.id2label[label.item()]} with confidence "
+            f"{round(score.item(), 3)} at location {box}"
+        )
+```
+This should output (something along the lines of):
+```
+Detected cat with confidence 0.998 at location [344.06, 24.85, 640.34, 373.74]
+Detected remote with confidence 0.997 at location [328.13, 75.93, 372.81, 187.66]
+Detected remote with confidence 0.997 at location [39.34, 70.13, 175.56, 118.78]
+Detected cat with confidence 0.998 at location [15.36, 51.75, 316.89, 471.16]
+Detected couch with confidence 0.995 at location [-0.19, 0.71, 639.73, 474.17]
 ```
 
 Currently, both the feature extractor and model support PyTorch. 
