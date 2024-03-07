@@ -83,7 +83,7 @@ The DETR model was trained on [COCO 2017 object detection](https://cocodataset.o
 
 ### Preprocessing
 
-The exact details of preprocessing of images during training/validation can be found [here](https://github.com/google-research/vision_transformer/blob/master/vit_jax/input_pipeline.py). 
+The exact details of preprocessing of images during training/validation can be found [here](https://github.com/google-research/vision_transformer/blob/main/vit_jax/input_pipeline.py). 
 
 Images are resized/rescaled such that the shortest side is at least 800 pixels and the largest side at most 1333 pixels, and normalized across the RGB channels with the ImageNet mean (0.485, 0.456, 0.406) and standard deviation (0.229, 0.224, 0.225).
 
